@@ -1,0 +1,17 @@
+*.nif
+*.dll
+*.exe
+*.7z
+*.zip
+build/
+dist/
+reports/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.env
+.idea/
+.vscode/
+*.staging-*/
