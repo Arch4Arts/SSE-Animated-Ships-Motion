@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Added `scripts/build_release.py` for archive or folder input.
+- Added automatic source-tree discovery and temporary 7-Zip extraction.
+- Added validated MO2-ready `.7z` packaging with `Meshes` at archive root.
+- Documented the open Riften longboat route-collision investigation.
+
 ## v8 — Mass-responsive motion
 
 - Coupled Heave and Pitch to one dominant wave response.
