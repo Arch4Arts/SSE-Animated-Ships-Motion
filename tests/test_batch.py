@@ -20,7 +20,7 @@ class BatchBuildIntegrationTests(unittest.TestCase):
         self.assertEqual(sum(path.parts[0] == "NarrowPath" for path in relative), 18)
         self.assertFalse(any("UpDown" in path.parts or "LOD" in path.parts for path in relative))
 
-    def test_builds_and_validates_standard_v7(self):
+    def test_builds_and_validates_standard_v8(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             output = pathlib.Path(temporary_directory) / "v4"
             summary = build_patch(SOURCE_ROOT, output, PYNIFLY_ROOT)
@@ -28,7 +28,7 @@ class BatchBuildIntegrationTests(unittest.TestCase):
             self.assertEqual(summary, {"built": 40, "Distant": 22, "NarrowPath": 18, "failed": 0})
             self.assertTrue(report.valid, report.errors)
             manifest = json.loads((output / "manifest.json").read_text(encoding="utf-8"))
-            self.assertEqual((manifest["version"], manifest["variant"]), (7, "standard"))
+            self.assertEqual((manifest["version"], manifest["variant"]), (8, "standard"))
             self.assertEqual({entry["profile"]["yaw_sigma_seconds"] for entry in manifest["meshes"]}, {2.0, 6.0, 15.0})
             self.assertEqual({entry["profile"]["sink_offset_units"] for entry in manifest["meshes"]}, {-24.5, -19.0, 0.0})
             self.assertEqual(len(manifest["meshes"]), 40)
