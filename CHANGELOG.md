@@ -1,9 +1,13 @@
 # Changelog
 
-## Unreleased
+## v8 — Mass-responsive motion
 
-- Approved the v8 mass-responsive motion design with distinct timing and
-  inertia for rowboats, longboats, and large ships.
+- Coupled Heave and Pitch to one dominant wave response.
+- Set dominant periods to 3/7.5/16 seconds for Rowboat/Longboat/Large Ship.
+- Set Roll periods to 4/12/32 seconds by hull class.
+- Added class-specific Pitch phase lead and cyclic Gaussian inertia.
+- Reduced secondary harmonic influence as hull mass increases.
+- Replaced forced final-key closure with validated naturally periodic curves.
 
 ## v7 — Reproducible baseline
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-Approved design; not implemented in the v7 source baseline.
+Implemented in source and manifest version 8.
 
 ## Goal
 

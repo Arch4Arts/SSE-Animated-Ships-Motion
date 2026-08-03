@@ -9,6 +9,19 @@ bow **Pitch**, lateral **Roll**, mass-dependent route speed, and dense inertial
 course rotation. Rowboats react quickly, longboats remain responsive, and large
 ships turn and rock with substantially more inertia.
 
+## v8 hull response
+
+| Hull | Heave/Pitch cycle | Roll cycle | Pitch lead | Pitch smoothing |
+|---|---:|---:|---:|---:|
+| Rowboat | 3 s | 4 s | 45° | 0.20 s |
+| Longboat | 7.5 s | 12 s | 55° | 0.75 s |
+| Large Ship | 16 s | 32 s | 65° | 2.50 s |
+
+Heave and Pitch respond to the same notional wave instead of moving as
+unrelated oscillators. Secondary surface detail decreases with hull mass.
+`Distant` and `NarrowPath` use the same timing for a hull class but retain
+different amplitudes for route clearance.
+
 ## Requirements
 
 - Skyrim Special Edition or Anniversary Edition
