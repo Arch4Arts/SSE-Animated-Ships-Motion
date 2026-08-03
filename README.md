@@ -73,6 +73,29 @@ output folder and optional archive must not already exist. The distributable
 archive opens directly to `Meshes/`; it has no extra wrapper folder and can be
 installed normally in MO2.
 
+## Publishing and deployment
+
+Generated NIFs are release assets and are not committed to Git. GitHub's
+automatic `Source code.zip` and `Source code.tar.gz` therefore do not contain
+the installable mod. A deployment must attach the `.7z` created by
+`scripts/build_release.py`.
+
+Release checklist:
+
+1. Run the complete test suite on `main`.
+2. Build the versioned `.7z` with the command above.
+3. Extract it into an empty folder and verify exactly 40 NIFs under the
+   top-level `Meshes/` directory, with no wrapper directory.
+4. Push the verified commit: `git push origin main`.
+5. In GitHub **Releases**, choose **Draft a new release**, create a version tag
+   such as `v1.0.0` targeting `main`, and attach the generated `.7z`.
+6. Download and inspect the attached asset while the release is still a draft,
+   then publish it.
+
+The public release title and attached filename should use the same version,
+for example `Animated Ships — Bobbing and Motion v1.0.0` and
+`Animated Ships - Bobbing and Motion-1.0.0.7z`.
+
 ## Development
 
 Set the two source paths and run the tests from the repository root:
@@ -90,7 +113,9 @@ python scripts/build_patch.py --source $env:ANIMATED_SHIPS_MESH_ROOT --output bu
 python scripts/validate_patch.py --source $env:ANIMATED_SHIPS_MESH_ROOT --output build/animated-ships-motion --pynifly $env:PYNIFLY_ROOT
 ```
 
-Technical details and design history live in [`docs/`](docs/).
+Technical details, deployment instructions, and design history live in
+[`docs/`](docs/). Ready-to-paste Nexus descriptions are kept at repository
+root in English and Russian.
 
 ## License
 
