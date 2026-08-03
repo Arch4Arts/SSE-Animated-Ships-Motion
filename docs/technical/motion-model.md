@@ -7,10 +7,19 @@
 - **Roll** rotates it around the longitudinal Y axis.
 - Local **Yaw** is intentionally zero; route course owns Z rotation.
 
-The v7 curve combines a dominant sine with a smaller harmonic, normalizes the
-result to the profile amplitude, and samples at 0.25-second intervals. Hull
-profiles control amplitude, period, sink offset, cruise multiplier, turn
-lookahead, minimum turn speed, and yaw-filter width.
+The v8 curve couples Heave and Pitch to one dominant signal, adds a smaller
+class-specific harmonic, cyclically filters Pitch, normalizes the results to
+their profile amplitudes, and samples at 0.25-second intervals.
+
+| Hull | Dominant | Roll | Pitch lead | Pitch sigma | Harmonic / weights |
+|---|---:|---:|---:|---:|---:|
+| Rowboat | 3 s | 4 s | 45° | 0.20 s | 1.5 s / 0.16 / 0.14 |
+| Longboat | 7.5 s | 12 s | 55° | 0.75 s | 3.75 s / 0.13 / 0.11 |
+| Large Ship | 16 s | 32 s | 65° | 2.50 s | 8 s / 0.08 / 0.06 |
+
+The two harmonic weights are Heave and Pitch respectively. Component periods
+must divide the configured loop exactly; invalid profiles are rejected instead
+of being hidden by an overwritten last key.
 
 ## Route motion
 

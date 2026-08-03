@@ -67,7 +67,7 @@ def build_patch(source_root: Path, output_root: Path, pynifly_root: Path) -> dic
                 "max_rotation_rate": result.max_rotation_rate,
                 "route_value_signature_sha256": result.route_signature_sha256,
             })
-        (staging / "manifest.json").write_text(json.dumps({"name":"Animated Ships - Pronounced Sailing Motion","version":7,"variant":"standard","meshes":entries}, indent=2, sort_keys=True), encoding="utf-8")
+        (staging / "manifest.json").write_text(json.dumps({"name":"Animated Ships - Bobbing and Motion","version":8,"variant":"standard","meshes":entries}, indent=2, sort_keys=True), encoding="utf-8")
         staging.rename(output_root)
     except Exception:
         if staging.exists(): shutil.rmtree(staging)
@@ -94,7 +94,7 @@ def validate_patch(source_root: Path, output_root: Path, pynifly_root: Path) -> 
     try:
         manifest=json.loads((output_root/"manifest.json").read_text(encoding="utf-8"))
         entries=manifest["meshes"]
-        if manifest.get("version") != 7 or manifest.get("variant") != "standard": errors.append("manifest version or variant mismatch")
+        if manifest.get("version") != 8 or manifest.get("variant") != "standard": errors.append("manifest version or variant mismatch")
     except Exception as exc:
         entries=[]; errors.append(f"manifest unreadable: {exc}")
     if len(entries)!=40: errors.append(f"manifest mesh count={len(entries)}, expected=40")

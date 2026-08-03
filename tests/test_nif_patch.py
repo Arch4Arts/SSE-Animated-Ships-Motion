@@ -21,7 +21,7 @@ class NifPatchIntegrationTests(unittest.TestCase):
         durations = {}
         heading_deltas = {}
         with tempfile.TemporaryDirectory() as temporary_directory:
-            for filename, expected_keys in (("shiprowboat01.nif", 33), ("shiplongboat01.nif", 121), ("shiplarge01.nif", 121)):
+            for filename, expected_keys in (("shiprowboat01.nif", 49), ("shiplongboat01.nif", 241), ("shiplarge01.nif", 385)):
                 source = SOURCE_ROOT / filename
                 before = NifFile(str(source))
                 before_values = route_value_signature(before)
