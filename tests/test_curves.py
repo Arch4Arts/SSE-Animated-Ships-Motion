@@ -98,9 +98,9 @@ class ProfileSelectionTests(unittest.TestCase):
 class MotionCurveTests(unittest.TestCase):
     def test_class_loops_close_with_expected_key_counts(self):
         for filename, count, stop in (
-            ("shiprowboat01.nif", 33, 8.0),
-            ("shiplongboat01.nif", 121, 30.0),
-            ("shiplarge01.nif", 121, 30.0),
+            ("shiprowboat01.nif", 49, 12.0),
+            ("shiplongboat01.nif", 241, 60.0),
+            ("shiplarge01.nif", 385, 96.0),
         ):
             with self.subTest(filename=filename):
                 samples = sample_motion(classify_mesh("Distant", filename))
@@ -108,6 +108,56 @@ class MotionCurveTests(unittest.TestCase):
                 self.assertEqual(samples[-1].time, stop)
                 self.assertEqual(samples[0], dataclasses.replace(samples[-1], time=0.0))
                 self.assertTrue(all(sample.yaw_radians == 0.0 for sample in samples))
+
+    def test_pitch_leads_heave_on_the_dominant_wave(self):
+        for filename in ("shiprowboat01.nif", "shiplongboat01.nif", "shiplarge01.nif"):
+            profile = classify_mesh("Distant", filename)
+            samples = sample_motion(profile)
+            first_cycle = samples[:round(profile.heave_pitch_period_seconds / 0.25)]
+            heave_peak = max(range(len(first_cycle)), key=lambda i: first_cycle[i].heave)
+            pitch_peak = max(range(len(first_cycle)), key=lambda i: first_cycle[i].pitch_radians)
+            lead = (heave_peak - pitch_peak) * 0.25
+            with self.subTest(filename=filename):
+                self.assertGreater(lead, 0.0)
+                self.assertLess(lead, profile.heave_pitch_period_seconds / 3.0)
+
+    def test_larger_hulls_reduce_normalized_pitch_acceleration(self):
+        accelerations = []
+        for filename in ("shiprowboat01.nif", "shiplongboat01.nif", "shiplarge01.nif"):
+            profile = classify_mesh("Distant", filename)
+            values = [sample.pitch_radians / math.radians(profile.pitch_degrees)
+                      for sample in sample_motion(profile)]
+            acceleration = max(abs(values[i+1] - 2*values[i] + values[i-1]) / 0.25**2
+                               for i in range(1, len(values)-1))
+            accelerations.append(acceleration)
+        self.assertGreater(accelerations[0], accelerations[1])
+        self.assertGreater(accelerations[1], accelerations[2])
+
+    def test_pitch_phase_and_smoothing_change_real_output(self):
+        base = classify_mesh("Distant", "shiprowboat01.nif")
+        phase_zero = sample_motion(dataclasses.replace(base, pitch_phase_degrees=0.0))
+        phase_ninety = sample_motion(dataclasses.replace(base, pitch_phase_degrees=90.0))
+        self.assertNotEqual([x.pitch_radians for x in phase_zero],
+                            [x.pitch_radians for x in phase_ninety])
+        lightly_filtered = sample_motion(dataclasses.replace(base, pitch_smoothing_sigma_seconds=0.2))
+        heavily_filtered = sample_motion(dataclasses.replace(base, pitch_smoothing_sigma_seconds=2.5))
+        light_step = max(abs(b.pitch_radians-a.pitch_radians)
+                         for a,b in zip(lightly_filtered, lightly_filtered[1:]))
+        heavy_step = max(abs(b.pitch_radians-a.pitch_radians)
+                         for a,b in zip(heavily_filtered, heavily_filtered[1:]))
+        self.assertLess(heavy_step, light_step)
+
+    def test_motion_closes_with_matching_seam_velocity(self):
+        for filename in ("shiprowboat01.nif", "shiplongboat01.nif", "shiplarge01.nif"):
+            samples = sample_motion(classify_mesh("Distant", filename))
+            for field in ("heave", "pitch_radians", "roll_radians"):
+                values = [getattr(sample, field) for sample in samples]
+                amplitude = max(abs(value) for value in values)
+                before = (values[-1] - values[-2]) / 0.25
+                after = (values[1] - values[0]) / 0.25
+                maximum_speed = max(abs(b-a) / 0.25 for a,b in zip(values, values[1:]))
+                self.assertLess(abs(after-before), maximum_speed * 0.75,
+                                f"{filename} {field} seam velocity")
 
     def test_curves_reach_configured_amplitudes(self):
         profile = classify_mesh("Distant", "shiplongboat01.nif")
@@ -118,7 +168,15 @@ class MotionCurveTests(unittest.TestCase):
 
     def test_rejects_step_that_cannot_close_loop(self):
         with self.assertRaisesRegex(ValueError, "step must divide loop duration"):
-            sample_motion(classify_mesh("Distant", "shiprowboat01.nif"), step=0.3)
+            sample_motion(classify_mesh("Distant", "shiprowboat01.nif"), step=0.7)
+
+    def test_rejects_component_period_that_cannot_close_loop(self):
+        invalid = dataclasses.replace(
+            classify_mesh("Distant", "shiprowboat01.nif"),
+            heave_pitch_period_seconds=3.1,
+        )
+        with self.assertRaisesRegex(ValueError, "period must divide loop duration"):
+            sample_motion(invalid)
 
 
 if __name__ == "__main__":
