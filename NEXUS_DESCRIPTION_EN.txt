@@ -1,0 +1,84 @@
+[size=5][b]Animated Ships — Bobbing and Motion[/b][/size]
+
+[b]Short description[/b]
+
+If Animated Ships started to look rigid after you installed the wonderful Bobbing Framework—and you wished moving boats would react to the water too—this mod is for you.
+
+[size=4][b]Overview[/b][/size]
+
+Animated Ships adds life to Skyrim's waters, but its travelling vessels move like rigid scenery: they follow their routes without visibly responding to the water. Animated Ships — Bobbing and Motion replaces the travelling ship meshes with mass-responsive animations so rowboats, longboats, and large ships feel different while underway.
+
+This is a mesh-only addon for Animated Ships. It contains no ESP/ESL, Papyrus scripts, SKSE plugin, quests, or placed references.
+
+[size=4][b]Features and Compatibility[/b][/size]
+
+[list]
+[*]Visible Heave (vertical motion), Pitch (bow rising and falling), and Roll (side-to-side rocking).
+[*]Fast, readable response for small rowboats.
+[*]Responsive but heavier motion for longboats.
+[*]Slow, massive motion for large ships.
+[*]Hull-size-based travel speed and smoother inertial course changes.
+[*]Moderate slowdown when a ship approaches a sharper turn.
+[*]Separate amplitudes for open Distant routes and constrained NarrowPath routes.
+[*]40 modified travelling-ship meshes: 22 Distant and 18 NarrowPath.
+[*]No changes to UpDown wreck animations, LOD meshes, base meshes, plugins, scripts, routes, or ship placement.
+[/list]
+
+[b]Animated Ships is required.[/b]
+
+Bobbing Framework inspired this addon, but it is not a requirement and this mod does not modify it.
+
+Compatibility patches that place or move the original Animated Ships activators—including the ESP and BOS options from Animated Ships Patches FMOD All in One—reuse the same base ship meshes and therefore receive this motion automatically.
+
+Another mod that replaces the same Animated Ships NIF files will conflict at the file level. Whichever mesh wins supplies the animation. If you use ParallaxGen or another generated mesh output, install this mod first and regenerate that output so it inherits the new animation data.
+
+[size=4][b]Performance[/b][/size]
+
+The mod has no scripts, background polling, SKSE DLL, or runtime configuration. It only replaces animated NIF files. The new motion uses denser animation keyframes, so the files contain more animation data than the originals, but the expected performance impact is negligible on a typical modded setup. This has not been benchmarked on every hardware configuration; please report reproducible performance problems with comparison data.
+
+[size=4][b]Installing or Removing During a Playthrough[/b][/size]
+
+Installation during an existing playthrough is safe. The mod adds no records and stores nothing in your save. Exit the game, install the archive, ensure its meshes win, and load your save normally.
+
+Removal during an existing playthrough is also safe for the same reason. Exit the game before uninstalling. Ships will return to the animation from the next winning mesh after the game or affected area is reloaded. No clean-save procedure is required.
+
+If you use ParallaxGen or another generated mesh output, regenerate it after both installation and removal. Otherwise an older generated copy may remain the winning mesh.
+
+[size=4][b]Installation[/b][/size]
+
+[list=1]
+[*]Install and enable Animated Ships.
+[*]Install Animated Ships — Bobbing and Motion with Mod Organizer 2, Vortex, or another mod manager.
+[*]Place it after Animated Ships so its NIF files overwrite the originals.
+[*]If you use ParallaxGen or another mesh-generating tool, rerun it after installing this mod and keep the regenerated output in its normal winning position.
+[*]Start the game. No plugin activation, MCM, Nemesis, Pandora, FNIS, or new game is required.
+[/list]
+
+[size=4][b]Bug Reports[/b][/size]
+
+For clipping, collisions, wrong motion, excessive height, or a problematic route, please include:
+
+[list]
+[*]The exact location and a short description of when the problem occurs.
+[*]A screenshot from More Informative Console while the affected ship is selected. The screenshot must show Base Form, Ref Form, and the defining/last-changing plugin information.
+[*]A normal screenshot or short video showing the route and surrounding geometry.
+[*]The mod currently winning the affected NIF in your mod manager, especially any ParallaxGen or other generated output.
+[*]Whether the issue still happens with this addon disabled on the same save and at the same location.
+[/list]
+
+Reports without an identifiable ship and reference are often impossible to reproduce because several ships can share the same visible model while using different placed references or routes.
+
+[size=4][b]AI Disclosure[/b][/size]
+
+This mod was created with substantial AI assistance from OpenAI Codex. I directed the visual goals, motion tuning, testing priorities, and in-game evaluation. AI assisted with technical research, NIF analysis, generator code, automated validation, and documentation. The final motion profiles were selected through iterative in-game testing rather than accepted from generated output without review.
+
+[size=4][b]Credits[/b][/size]
+
+[list]
+[*]The author of Animated Ships for the original system, routes, and ship assets.
+[*]The author of Bobbing Framework for the inspiration to make moving ships respond visibly to water.
+[*]The PyNifly/Nifly contributors for NIF tooling.
+[*]Bethesda Game Studios for Skyrim.
+[/list]
+
+[b]Special thanks to the author of houseCARL. Without this tool, this mod would not exist![/b]
